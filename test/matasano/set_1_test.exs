@@ -13,4 +13,7 @@ defmodule MatasanoSet1Test do
       "686974207468652062756c6c277320657965") ==
       "746865206b696420646f6e277420706c6179"
   end
+
+  test "encypted xor" do
+  end
 end

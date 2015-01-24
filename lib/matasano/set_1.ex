@@ -42,4 +42,19 @@ defmodule Matasano.Set1 do
     for {lb, rb} <- zipped_list, do: Bitwise.bxor(lb, rb)
   end
 
+  def xor_and_decode_hex(hex_string, char) do
+    xor_string = String.duplicate(char, String.length(hex_string))
+    xored = fixed_xor(hex_string, xor_string)
+    decoded = Base.decode16!(xored, case: :lower)
+    if String.valid?(decoded) do
+      IO.puts decoded
+    end
+  end
+
+  def decode_xored_hex(hex_string) do
+    # chars = ~w(a b c d e f g h i j k l m n o p q r s t u v w x y z) 
+    chars = ~w(1 2 3 4 5 5 7 8 9 a b c d e f A B C D E F) 
+    Enum.map(chars, &(xor_and_decode_hex(hex_string, &1)))
+  end
+
 end
