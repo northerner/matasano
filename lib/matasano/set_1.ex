@@ -8,26 +8,38 @@ defmodule Matasano.Set1 do
   end
 
   def fixed_xor(left, right) do
-    [result | _] = binary_xor(hex_to_binary_list(left), hex_to_binary_list(right))
-    Integer.to_string(result, 16)
+    binary_list_xor(hex_to_binary_list(left), hex_to_binary_list(right))
+    |> Enum.map(&(binary_list_to_hex(&1)))
+    |> Enum.join
+    |> String.downcase
   end
 
   def hex_to_binary_list(hex) do
     String.upcase(hex)
-    |> String.to_integer(16)
-    |> Integer.to_string(2)
-    |> String.split
+    |> String.codepoints
+    |> Enum.map(&(String.to_integer(&1, 16)))
+    |> Enum.map(&(Integer.to_string(&1, 2)))
+    |> Enum.map(&(String.rjust(&1, 4, ?0)))
+    |> Enum.map(&(String.codepoints(&1)))
+    |> Enum.map(&(list_to_integers(&1)))
   end
 
-  def binary_xor(left, right) do
+  def binary_list_to_hex(list) do
+    Enum.join(list)
+    |> String.to_integer(2)
+    |> Integer.to_string(16)
+  end
+
+  def list_to_integers(list), do: Enum.map(list, &(String.to_integer(&1)))
+
+  def binary_list_xor(left, right) do
     Enum.zip(left, right)
     |> Enum.map(&(bxor_pair(&1)))
   end
 
   defp bxor_pair({left, right}) do
-    lb = String.to_integer(left)
-    rb = String.to_integer(right)
-    Bitwise.bxor(lb, rb) 
+    zipped_list = Enum.zip(left, right)
+    for {lb, rb} <- zipped_list, do: Bitwise.bxor(lb, rb)
   end
 
 end
